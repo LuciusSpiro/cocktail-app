@@ -18,6 +18,7 @@ export function IngredientPicker({
   const [showAdd, setShowAdd] = useState(false);
   const [newName, setNewName] = useState('');
   const [newIcon, setNewIcon] = useState('');
+  const [newCategory, setNewCategory] = useState(ingredientCategories[0]);
 
   const selectedIds = new Set(selected.map((s) => s.id));
 
@@ -25,8 +26,8 @@ export function IngredientPicker({
     ing.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const categories = [...ingredientCategories, 'Eigene'];
-  const grouped = categories
+  const allCategories = [...new Set([...ingredientCategories, ...filtered.map((i) => i.category)])];
+  const grouped = allCategories
     .map((cat) => ({
       category: cat,
       items: filtered.filter((ing) => ing.category === cat),
@@ -39,10 +40,11 @@ export function IngredientPicker({
 
   const handleAddCustom = async () => {
     if (!newName.trim()) return;
-    const ingredient = await addCustomIngredient(newName.trim(), newIcon || '🍹');
+    const ingredient = await addCustomIngredient(newName.trim(), newIcon || '🍹', newCategory);
     onToggle({ id: ingredient.id, name: ingredient.name, icon: ingredient.icon });
     setNewName('');
     setNewIcon('');
+    setNewCategory(ingredientCategories[0]);
     setShowAdd(false);
   };
 
@@ -104,6 +106,18 @@ export function IngredientPicker({
               className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-500/50 mb-3 placeholder:text-zinc-500"
               autoFocus
             />
+            <div className="mb-3">
+              <span className="text-zinc-500 text-xs mb-1 block">Kategorie:</span>
+              <select
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="w-full bg-zinc-800 text-white rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-500/50 appearance-none"
+              >
+                {ingredientCategories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
             <div className="mb-3">
               <span className="text-zinc-500 text-xs mb-1 block">Icon wählen (optional):</span>
               <div className="flex flex-wrap gap-1.5">

@@ -12,12 +12,12 @@ export function useIngredients() {
 
   const allIngredients = [...defaultIngredients, ...customIngredients];
 
-  const addCustomIngredient = useCallback(async (name: string, icon: string) => {
+  const addCustomIngredient = useCallback(async (name: string, icon: string, category: string) => {
     const ingredient: Ingredient = {
       id: `custom-${Date.now()}`,
       name,
       icon: icon || '🍹',
-      category: 'Eigene',
+      category,
       isCustom: true,
     };
     await db.saveCustomIngredient(ingredient);

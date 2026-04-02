@@ -18,6 +18,7 @@ export function CocktailEditor() {
   const [name, setName] = useState('');
   const [image, setImage] = useState<string | null>(null);
   const [rating, setRating] = useState(3);
+  const [location, setLocation] = useState('');
   const [ingredients, setIngredients] = useState<CocktailIngredient[]>([]);
   const [showPicker, setShowPicker] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -29,6 +30,7 @@ export function CocktailEditor() {
         setName(cocktail.name);
         setImage(cocktail.image);
         setRating(cocktail.rating);
+        setLocation(cocktail.location || '');
         setIngredients(cocktail.ingredients);
       }
     }
@@ -56,6 +58,7 @@ export function CocktailEditor() {
       name: name.trim(),
       image,
       rating,
+      location: location.trim(),
       ingredients,
       createdAt: id ? (getCocktail(id)?.createdAt || Date.now()) : Date.now(),
     };
@@ -66,7 +69,7 @@ export function CocktailEditor() {
       await updateCocktail(cocktail);
     }
     navigate('/');
-  }, [name, image, rating, ingredients, id, isNew, getCocktail, addCocktail, updateCocktail, navigate]);
+  }, [name, image, rating, location, ingredients, id, isNew, getCocktail, addCocktail, updateCocktail, navigate]);
 
   // Register save action in bottom nav
   useEffect(() => {
@@ -107,6 +110,18 @@ export function CocktailEditor() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="z.B. Mojito"
+          className="w-full bg-zinc-900 text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-amber-500/50 placeholder:text-zinc-600"
+        />
+      </div>
+
+      {/* Location */}
+      <div className="mb-6">
+        <label className="text-zinc-500 text-sm mb-2 block">Fundort</label>
+        <input
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="z.B. Strandbar Mallorca"
           className="w-full bg-zinc-900 text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-amber-500/50 placeholder:text-zinc-600"
         />
       </div>

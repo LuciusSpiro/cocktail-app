@@ -3,6 +3,7 @@ export interface Cocktail {
   name: string;
   image: string | null; // "data:image/jpeg;base64,..." or "placeholder:martini"
   rating: number; // 1-5
+  location: string; // Fundort
   ingredients: CocktailIngredient[];
   createdAt: number;
 }
