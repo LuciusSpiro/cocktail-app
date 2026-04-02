@@ -9,7 +9,7 @@ import { ShoppingList } from './pages/ShoppingList';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/cocktail-app">
       <CocktailProvider>
         <ShoppingListProvider>
           <SaveActionProvider>
