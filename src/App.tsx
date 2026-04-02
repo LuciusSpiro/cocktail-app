@@ -6,6 +6,7 @@ import { AppLayout } from './components/Layout';
 import { BarOverview } from './pages/BarOverview';
 import { CocktailEditor } from './pages/CocktailEditor';
 import { ShoppingList } from './pages/ShoppingList';
+import { Settings } from './pages/Settings';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/cocktail/new" element={<CocktailEditor />} />
                 <Route path="/cocktail/:id" element={<CocktailEditor />} />
                 <Route path="/shopping" element={<ShoppingList />} />
+              <Route path="/settings" element={<Settings />} />
               </Routes>
             </AppLayout>
           </SaveActionProvider>

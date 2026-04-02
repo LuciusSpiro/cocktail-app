@@ -88,3 +88,49 @@ export async function clearShoppingList(): Promise<void> {
   const db = await getDB();
   await db.clear('shoppingList');
 }
+
+// --- Export / Import ---
+
+export interface ExportData {
+  version: number;
+  exportedAt: string;
+  cocktails: Cocktail[];
+  customIngredients: Ingredient[];
+  shoppingList: ShoppingItem[];
+}
+
+export async function exportAll(): Promise<ExportData> {
+  const db = await getDB();
+  return {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    cocktails: await db.getAll('cocktails'),
+    customIngredients: await db.getAll('customIngredients'),
+    shoppingList: await db.getAll('shoppingList'),
+  };
+}
+
+export async function importAll(data: ExportData): Promise<void> {
+  const db = await getDB();
+
+  const txCocktails = db.transaction('cocktails', 'readwrite');
+  await txCocktails.store.clear();
+  for (const item of data.cocktails) {
+    await txCocktails.store.put(item);
+  }
+  await txCocktails.done;
+
+  const txIngredients = db.transaction('customIngredients', 'readwrite');
+  await txIngredients.store.clear();
+  for (const item of data.customIngredients) {
+    await txIngredients.store.put(item);
+  }
+  await txIngredients.done;
+
+  const txShopping = db.transaction('shoppingList', 'readwrite');
+  await txShopping.store.clear();
+  for (const item of data.shoppingList) {
+    await txShopping.store.put(item);
+  }
+  await txShopping.done;
+}
